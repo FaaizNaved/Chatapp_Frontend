@@ -1,16 +1,33 @@
-// src/socket.js  — singleton socket.io-client instance
 import { io } from "socket.io-client";
 
 let socket = null;
 
-export function getSocket(token) {
-  if (!socket || socket.disconnected) {
-    socket = io("http://localhost:4000", {
-      auth: { token },
-      transports: ["websocket", "polling"],
-      autoConnect: true
-    });
+function resolveSocketUrl() {
+  const configuredUrl = import.meta.env.VITE_SOCKET_URL || import.meta.env.VITE_API_URL;
+  if (configuredUrl) {
+    return configuredUrl.replace(/\/api\/?$/, "");
   }
+
+  return window.location.origin;
+}
+
+export function getSocket(token) {
+  if (socket) {
+    socket.auth = { token };
+    if (socket.disconnected) {
+      socket.connect();
+    }
+
+    return socket;
+  }
+
+  socket = io(resolveSocketUrl(), {
+    path: "/socket.io",
+    auth: { token },
+    transports: ["websocket", "polling"],
+    autoConnect: true
+  });
+
   return socket;
 }
 
