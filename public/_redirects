@@ -1,0 +1,3 @@
+/api/*  https://chatapp-backend-bs23.onrender.com/api/:splat  200
+/socket.io/*  https://chatapp-backend-bs23.onrender.com/socket.io/:splat  200
+/*  /index.html  200
