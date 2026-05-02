@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { API_BASE } from "../lib/authApi";
 
 /* ── Icons ─────────────────────────────────────────────────── */
 const CheckIcon = () => (
@@ -64,7 +65,7 @@ function ContactForm() {
     setStatus("loading");
     setErrorMsg("");
     try {
-      const res = await fetch("/api/contact", {
+      const res = await fetch(`${API_BASE}/api/contact`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),

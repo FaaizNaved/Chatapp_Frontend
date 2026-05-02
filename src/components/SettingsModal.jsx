@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, memo } from "react";
 import UserAvatar from "./UserAvatar";
+import { API_BASE } from "../lib/authApi";
 
 /* ── Token colours ─────────────────────────────────────────── */
 const PRESET_COLORS = [
@@ -93,7 +94,7 @@ function ContactVerifyRow({ field, icon, label, currentUser, onVerified }) {
   const sendOtp = async (val) => {
     setMode("loading"); setMsg("");
     try {
-      const res = await fetch("/api/verify/send-otp", {
+      const res = await fetch(`${API_BASE}/api/verify/send-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token()}` },
         body: JSON.stringify({ field, value: val || input }),
@@ -107,7 +108,7 @@ function ContactVerifyRow({ field, icon, label, currentUser, onVerified }) {
   const confirmOtp = async () => {
     setMode("loading"); setMsg("");
     try {
-      const res = await fetch("/api/verify/confirm-otp", {
+      const res = await fetch(`${API_BASE}/api/verify/confirm-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token()}` },
         body: JSON.stringify({ field, code: otpCode }),
