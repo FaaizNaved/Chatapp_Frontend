@@ -81,16 +81,16 @@ function ContactForm() {
   if (status === "success") {
     return (
       <div style={{
-        padding: "40px 32px", textAlign: "center",
-        background: "rgba(20,184,166,0.08)", borderRadius: 16,
-        border: "1px solid rgba(20,184,166,0.2)",
+        padding: "32px 28px", textAlign: "center",
+        background: "var(--accent-soft)", borderRadius: 16,
+        border: "1px solid var(--border-accent)",
       }}>
         <div style={{ fontSize: "3rem", marginBottom: 16 }}>🎉</div>
-        <h3 style={{ margin: "0 0 12px", color: "var(--accent-strong, #2dd4bf)", fontSize: "1.4rem" }}>
+        <h3 style={{ margin: "0 0 12px", color: "var(--accent-strong)", fontSize: "1.4rem" }}>
           Thank you! We'll reach out soon.
         </h3>
-        <p style={{ color: "#94a3b8", margin: 0, lineHeight: 1.7 }}>
-          Your enquiry has been received. We've also sent a confirmation to <strong style={{ color: "#e2e8f0" }}>{form.email}</strong>.
+        <p style={{ color: "var(--text-secondary)", margin: 0, lineHeight: 1.7 }}>
+          Your enquiry has been received. We've also sent a confirmation to <strong style={{ color: "var(--text-primary)" }}>{form.email}</strong>.
           Expect to hear from us within 24 hours.
         </p>
       </div>
@@ -101,7 +101,7 @@ function ContactForm() {
     <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }} className="contact-grid">
         <div>
-          <label style={{ display:"block", fontSize:"0.8rem", fontWeight:700, color:"#94a3b8", marginBottom:6, textTransform:"uppercase", letterSpacing:"0.06em" }}>
+          <label style={{ display:"block", fontSize:"0.8rem", fontWeight:700, color:"var(--text-secondary)", marginBottom:6, textTransform:"uppercase", letterSpacing:"0.06em" }}>
             Name
           </label>
           <input
@@ -114,8 +114,8 @@ function ContactForm() {
           />
         </div>
         <div>
-          <label style={{ display:"block", fontSize:"0.8rem", fontWeight:700, color:"#94a3b8", marginBottom:6, textTransform:"uppercase", letterSpacing:"0.06em" }}>
-            Email <span style={{ color: "#f87171" }}>*</span>
+          <label style={{ display:"block", fontSize:"0.8rem", fontWeight:700, color:"var(--text-secondary)", marginBottom:6, textTransform:"uppercase", letterSpacing:"0.06em" }}>
+            Email <span style={{ color: "var(--danger)" }}>*</span>
           </label>
           <input
             className="about-input"
@@ -128,7 +128,7 @@ function ContactForm() {
           />
         </div>
         <div>
-          <label style={{ display:"block", fontSize:"0.8rem", fontWeight:700, color:"#94a3b8", marginBottom:6, textTransform:"uppercase", letterSpacing:"0.06em" }}>
+          <label style={{ display:"block", fontSize:"0.8rem", fontWeight:700, color:"var(--text-secondary)", marginBottom:6, textTransform:"uppercase", letterSpacing:"0.06em" }}>
             Phone <span style={{ color: "#f87171" }}>*</span>
           </label>
           <input
@@ -142,7 +142,7 @@ function ContactForm() {
           />
         </div>
         <div>
-          <label style={{ display:"block", fontSize:"0.8rem", fontWeight:700, color:"#94a3b8", marginBottom:6, textTransform:"uppercase", letterSpacing:"0.06em" }}>
+          <label style={{ display:"block", fontSize:"0.8rem", fontWeight:700, color:"var(--text-secondary)", marginBottom:6, textTransform:"uppercase", letterSpacing:"0.06em" }}>
             Message
           </label>
           <input
@@ -188,9 +188,9 @@ function ContactForm() {
 
 const inputStyle = {
   width: "100%", padding: "11px 14px",
-  background: "rgba(255,255,255,0.05)",
-  border: "1px solid rgba(255,255,255,0.1)",
-  borderRadius: 10, color: "#e2e8f0", fontSize: "0.9rem",
+  background: "var(--bg-soft)",
+  border: "1px solid var(--border)",
+  borderRadius: 10, color: "var(--text-primary)", fontSize: "0.9rem",
   outline: "none", boxSizing: "border-box",
   transition: "border-color 0.2s",
 };
@@ -201,13 +201,13 @@ export default function AboutPage() {
     <div style={{
       minHeight: "100dvh",
       width: "100%",
-      background: "linear-gradient(135deg, #0f1117 0%, #0d1b2a 50%, #0f1117 100%)",
-      color: "#e2e8f0",
+      background: "var(--bg-base)",
+      color: "var(--text-primary)",
       fontFamily: "'Inter', system-ui, sans-serif",
     }}>
       {/* Background orbs */}
       <div style={{ position:"fixed", inset:0, overflow:"hidden", pointerEvents:"none", zIndex:0 }}>
-        <div style={{ position:"absolute", width:600, height:600, borderRadius:"50%", background:"rgba(20,184,166,0.08)", filter:"blur(120px)", top:-200, left:-200 }}/>
+        <div style={{ position:"absolute", width:600, height:600, borderRadius:"50%", background:"var(--accent-glow)", filter:"blur(120px)", top:-200, left:-200 }}/>
         <div style={{ position:"absolute", width:500, height:500, borderRadius:"50%", background:"rgba(99,102,241,0.07)", filter:"blur(120px)", bottom:-150, right:-100 }}/>
       </div>
 
@@ -215,54 +215,54 @@ export default function AboutPage() {
 
         {/* ── NAV ─────────────────────────────────────────────── */}
         <nav className="about-nav">
-          <Link to="/chat" style={{ display:"flex", alignItems:"center", gap:8, textDecoration:"none", color:"#94a3b8",
-            fontSize:"0.88rem", fontWeight:600, background:"rgba(255,255,255,0.05)", padding:"8px 14px",
-            borderRadius:8, border:"1px solid rgba(255,255,255,0.08)", transition:"all 0.2s" }}>
+          <Link to="/chat" style={{ display:"flex", alignItems:"center", gap:8, textDecoration:"none", color:"var(--text-secondary)",
+            fontSize:"0.88rem", fontWeight:600, background:"var(--bg-soft)", padding:"8px 14px",
+            borderRadius:8, border:"1px solid var(--border)", transition:"all 0.2s" }}>
             <ArrowLeft /> Back to Chat
           </Link>
           <div style={{ display:"flex", alignItems:"center", gap:10, marginLeft:"auto" }}>
             <span style={{ fontSize:"1.4rem" }}>💬</span>
-            <span style={{ fontWeight:800, fontSize:"1.1rem", background:"linear-gradient(135deg,#e2e8f0,#2dd4bf)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>ChatSphere</span>
+            <span style={{ fontWeight:800, fontSize:"1.1rem", background:"linear-gradient(135deg,var(--text-primary),var(--accent-strong))", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>ChatSphere</span>
           </div>
         </nav>
 
         {/* ── HERO ────────────────────────────────────────────── */}
         <section className="about-hero">
           <div style={{ display:"inline-flex", alignItems:"center", gap:8, padding:"6px 16px",
-            background:"rgba(20,184,166,0.1)", borderRadius:999, border:"1px solid rgba(20,184,166,0.2)",
-            fontSize:"0.8rem", fontWeight:700, color:"#2dd4bf", letterSpacing:"0.08em",
+            background:"var(--accent-soft)", borderRadius:999, border:"1px solid var(--border-accent)",
+            fontSize:"0.8rem", fontWeight:700, color:"var(--accent-strong)", letterSpacing:"0.08em",
             textTransform:"uppercase", marginBottom:24 }}>
             ✨ About the Product
           </div>
           <h1 style={{ fontSize:"clamp(2rem,5vw,3.5rem)", fontWeight:900, lineHeight:1.15, margin:"0 0 20px",
-            background:"linear-gradient(135deg,#f1f5f9,#2dd4bf 60%,#6366f1)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>
+            background:"linear-gradient(135deg,var(--text-primary),var(--accent-strong) 60%,#6366f1)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>
             Real-time Chat, Reinvented
           </h1>
-          <p style={{ fontSize:"1.15rem", color:"#94a3b8", lineHeight:1.75, margin:"0 auto", maxWidth:600 }}>
-            ChatSphere is a production-ready, embeddable real-time communication platform built with <strong style={{ color:"#e2e8f0" }}>React</strong>, <strong style={{ color:"#e2e8f0" }}>Node.js</strong>, and <strong style={{ color:"#e2e8f0" }}>Socket.io</strong>. Drop it into any website in minutes.
+          <p style={{ fontSize:"1.15rem", color:"var(--text-secondary)", lineHeight:1.75, margin:"0 auto", maxWidth:600 }}>
+            ChatSphere is a production-ready, embeddable real-time communication platform built with <strong style={{ color:"var(--text-primary)" }}>React</strong>, <strong style={{ color:"var(--text-primary)" }}>Node.js</strong>, and <strong style={{ color:"var(--text-primary)" }}>Socket.io</strong>. Drop it into any website in minutes.
           </p>
         </section>
 
         {/* ── FEATURES GRID ───────────────────────────────────── */}
         <section className="about-section">
           <h2 style={{ textAlign:"center", fontSize:"1.8rem", fontWeight:800, margin:"0 0 48px",
-            background:"linear-gradient(135deg,#f1f5f9,#94a3b8)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>
+            background:"linear-gradient(135deg,var(--text-primary),var(--text-secondary))", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>
             Everything You Need
           </h2>
           <div className="about-features-grid">
             {FEATURES.map((f) => (
               <div key={f.title} style={{
                 padding: "24px", borderRadius:16,
-                background: "rgba(255,255,255,0.03)",
-                border: "1px solid rgba(255,255,255,0.07)",
+                background: "var(--bg-soft)",
+                border: "1px solid var(--border)",
                 backdropFilter: "blur(10px)",
                 transition: "transform 0.2s, border-color 0.2s",
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.transform="translateY(-4px)"; e.currentTarget.style.borderColor="rgba(20,184,166,0.25)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.borderColor="rgba(255,255,255,0.07)"; }}>
+              onMouseEnter={(e) => { e.currentTarget.style.transform="translateY(-4px)"; e.currentTarget.style.borderColor="var(--border-accent)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.borderColor="var(--border)"; }}>
                 <div style={{ fontSize:"1.8rem", marginBottom:14 }}>{f.icon}</div>
-                <h3 style={{ margin:"0 0 8px", fontSize:"1rem", fontWeight:700, color:"#f1f5f9" }}>{f.title}</h3>
-                <p style={{ margin:0, fontSize:"0.88rem", color:"#64748b", lineHeight:1.65 }}>{f.desc}</p>
+                <h3 style={{ margin:"0 0 8px", fontSize:"1rem", fontWeight:700, color:"var(--text-primary)" }}>{f.title}</h3>
+                <p style={{ margin:0, fontSize:"0.88rem", color:"var(--text-muted)", lineHeight:1.65 }}>{f.desc}</p>
               </div>
             ))}
           </div>
@@ -271,10 +271,10 @@ export default function AboutPage() {
         {/* ── HOW TO INTEGRATE ────────────────────────────────── */}
         <section className="about-section-sm">
           <div className="about-card">
-            <h2 style={{ margin:"0 0 16px", fontSize:"1.8rem", fontWeight:800, color:"#f1f5f9" }}>
+            <h2 style={{ margin:"0 0 16px", fontSize:"1.8rem", fontWeight:800, color:"var(--text-primary)" }}>
               Embed in Any Website — One Snippet
             </h2>
-            <p style={{ color:"#94a3b8", lineHeight:1.7, margin:"0 0 28px" }}>
+            <p style={{ color:"var(--text-secondary)", lineHeight:1.7, margin:"0 0 28px" }}>
               ChatSphere is architected as a standalone web application <em>and</em> an embeddable widget.
               Adding it to your existing project takes less than 60 seconds.
             </p>
@@ -287,15 +287,15 @@ export default function AboutPage() {
                 "Self-hostable on any VPS, Render, Railway, or Heroku",
               ].map((item) => (
                 <div key={item} style={{ display:"flex", alignItems:"flex-start", gap:10 }}>
-                  <span style={{ color:"#2dd4bf", marginTop:1 }}><CheckIcon /></span>
-                  <span style={{ color:"#cbd5e1", fontSize:"0.9rem", lineHeight:1.6 }}>{item}</span>
+                  <span style={{ color:"var(--accent-strong)", marginTop:1 }}><CheckIcon /></span>
+                  <span style={{ color:"var(--text-secondary)", fontSize:"0.9rem", lineHeight:1.6 }}>{item}</span>
                 </div>
               ))}
             </div>
             <pre style={{
-              background:"rgba(0,0,0,0.4)", borderRadius:12, padding:"20px 24px",
-              fontSize:"0.82rem", color:"#7dd3fc", overflowX:"auto",
-              border:"1px solid rgba(99,102,241,0.2)", margin:0, lineHeight:1.7,
+              background:"var(--bg-elevated)", borderRadius:12, padding:"20px 24px",
+              fontSize:"0.82rem", color:"var(--accent-strong)", overflowX:"auto",
+              border:"1px solid var(--border-accent)", margin:0, lineHeight:1.7,
             }}>
               <code>{HOW_TO_EMBED}</code>
             </pre>
@@ -305,19 +305,19 @@ export default function AboutPage() {
         {/* ── USE CASES ───────────────────────────────────────── */}
         <section className="about-section">
           <h2 style={{ textAlign:"center", fontSize:"1.8rem", fontWeight:800, margin:"0 0 16px",
-            background:"linear-gradient(135deg,#f1f5f9,#94a3b8)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>
+            background:"linear-gradient(135deg,var(--text-primary),var(--text-secondary))", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>
             Who Uses ChatSphere?
           </h2>
-          <p style={{ textAlign:"center", color:"#64748b", fontSize:"0.95rem", margin:"0 0 40px" }}>
+          <p style={{ textAlign:"center", color:"var(--text-muted)", fontSize:"0.95rem", margin:"0 0 40px" }}>
             Any product that needs real-time communication can plug in ChatSphere.
           </p>
           <div className="about-usecases-grid">
             {USE_CASES.map((uc) => (
               <div key={uc.title} style={{ padding:"22px 24px", borderRadius:14,
-                background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.07)" }}>
+                background:"var(--bg-soft)", border:"1px solid var(--border)" }}>
                 <div style={{ fontSize:"1.5rem", marginBottom:10 }}>{uc.icon}</div>
-                <h3 style={{ margin:"0 0 6px", fontSize:"0.95rem", fontWeight:700, color:"#f1f5f9" }}>{uc.title}</h3>
-                <p style={{ margin:0, fontSize:"0.84rem", color:"#64748b", lineHeight:1.6 }}>{uc.desc}</p>
+                <h3 style={{ margin:"0 0 6px", fontSize:"0.95rem", fontWeight:700, color:"var(--text-primary)" }}>{uc.title}</h3>
+                <p style={{ margin:0, fontSize:"0.84rem", color:"var(--text-muted)", lineHeight:1.6 }}>{uc.desc}</p>
               </div>
             ))}
           </div>
@@ -328,11 +328,11 @@ export default function AboutPage() {
           <div className="about-cta-card">
             <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:8 }}>
               <span style={{ fontSize:"1.8rem" }}>🤝</span>
-              <h2 style={{ margin:0, fontSize:"1.6rem", fontWeight:800, color:"#f1f5f9" }}>
+              <h2 style={{ margin:0, fontSize:"1.6rem", fontWeight:800, color:"var(--text-primary)" }}>
                 Want to Integrate ChatSphere?
               </h2>
             </div>
-            <p style={{ color:"#94a3b8", lineHeight:1.7, margin:"0 0 32px" }}>
+            <p style={{ color:"var(--text-secondary)", lineHeight:1.7, margin:"0 0 32px" }}>
               Fill in your details below and the developer will get back to you within 24 hours
               to discuss integration, pricing, and custom requirements.
             </p>
@@ -341,12 +341,12 @@ export default function AboutPage() {
         </section>
 
         {/* ── FOOTER ──────────────────────────────────────────── */}
-        <footer style={{ borderTop:"1px solid rgba(255,255,255,0.06)", padding:"32px 40px", textAlign:"center", color:"#475569", fontSize:"0.84rem" }}>
+        <footer style={{ borderTop:"1px solid var(--border)", padding:"32px 40px", textAlign:"center", color:"var(--text-muted)", fontSize:"0.84rem" }}>
           <p style={{ margin:"0 0 8px" }}>
             Built with ❤️ using React, Node.js & Socket.io &nbsp;·&nbsp;
-            <a href="mailto:mfaaiznaved786@gmail.com" style={{ color:"#2dd4bf", textDecoration:"none" }}>mfaaiznaved786@gmail.com</a>
+            <a href="mailto:mfaaiznaved786@gmail.com" style={{ color:"var(--accent-strong)", textDecoration:"none" }}>mfaaiznaved786@gmail.com</a>
           </p>
-          <p style={{ margin:0, fontSize:"0.78rem", color:"#334155" }}>© 2025 ChatSphere. All rights reserved.</p>
+          <p style={{ margin:0, fontSize:"0.78rem", color:"var(--text-muted)" }}>© 2025 ChatSphere. All rights reserved.</p>
         </footer>
 
       </div>
@@ -356,7 +356,7 @@ export default function AboutPage() {
 
         /* Nav */
         .about-nav { padding: 16px 20px; display: flex; align-items: center; gap: 12;
-          border-bottom: 1px solid rgba(255,255,255,0.06); backdrop-filter: blur(12px); flex-wrap: wrap; }
+          border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); flex-wrap: wrap; }
 
         /* Hero */
         .about-hero { text-align: center; padding: 60px 20px 48px; max-width: 800px; margin: 0 auto; }
@@ -374,16 +374,16 @@ export default function AboutPage() {
         .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
         /* Card sections inner padding */
-        .about-card { background: rgba(20,184,166,0.05); border: 1px solid rgba(20,184,166,0.15);
+        .about-card { background: var(--accent-soft); border: 1px solid var(--border-accent);
           border-radius: 20px; padding: 40px 32px; }
-        .about-cta-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+        .about-cta-card { background: var(--bg-soft); border: 1px solid var(--border);
           border-radius: 20px; padding: 40px 32px; }
 
         /* Input focus */
-        .about-input { width: 100%; padding: 11px 14px; background: rgba(255,255,255,0.05);
-          border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: #e2e8f0;
+        .about-input { width: 100%; padding: 11px 14px; background: var(--bg-soft);
+          border: 1px solid var(--border); border-radius: 10px; color: var(--text-primary);
           font-size: 0.9rem; outline: none; box-sizing: border-box; transition: border-color 0.2s; }
-        .about-input:focus { border-color: rgba(20,184,166,0.5) !important; }
+        .about-input:focus { border-color: var(--accent) !important; }
 
         /* Spinner */
         @keyframes spin { to { transform: rotate(360deg); } }
@@ -404,3 +404,4 @@ export default function AboutPage() {
     </div>
   );
 }
+

@@ -1,31 +1,18 @@
 import { io } from "socket.io-client";
 
+const SERVER = import.meta.env.VITE_API_URL || "http://localhost:4000";
+
 let socket = null;
 
-function resolveSocketUrl() {
-  const configuredUrl = import.meta.env.VITE_SOCKET_URL || import.meta.env.VITE_API_URL;
-  if (configuredUrl) {
-    return configuredUrl.replace(/\/api\/?$/, "");
-  }
-
-  return window.location.origin;
-}
-
 export function getSocket(token) {
-  if (socket) {
-    socket.auth = { token };
-    if (socket.disconnected) {
-      socket.connect();
-    }
+  if (socket && socket.connected) return socket;
+  if (socket) socket.disconnect();
 
-    return socket;
-  }
-
-  socket = io(resolveSocketUrl(), {
-    path: "/socket.io",
+  socket = io(SERVER, {
     auth: { token },
     transports: ["websocket", "polling"],
-    autoConnect: true
+    reconnectionAttempts: 10,
+    reconnectionDelay: 1500,
   });
 
   return socket;
@@ -37,5 +24,3 @@ export function disconnectSocket() {
     socket = null;
   }
 }
-
-export { socket };

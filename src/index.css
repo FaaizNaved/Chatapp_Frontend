@@ -235,6 +235,7 @@ a { cursor: pointer; }
 *, *::before, *::after { box-sizing: border-box; }
 
 html, body, #root { min-height: 100%; }
+html { font-size: var(--font-size-base); }
 
 body {
   margin: 0;
