@@ -1,16 +1,20 @@
-// src/socket.js  — singleton socket.io-client instance
 import { io } from "socket.io-client";
+
+const SERVER = import.meta.env.VITE_API_URL || "http://localhost:4000";
 
 let socket = null;
 
 export function getSocket(token) {
-  if (!socket || socket.disconnected) {
-    socket = io("http://localhost:4000", {
-      auth: { token },
-      transports: ["websocket", "polling"],
-      autoConnect: true
-    });
-  }
+  if (socket && socket.connected) return socket;
+  if (socket) socket.disconnect();
+
+  socket = io(SERVER, {
+    auth: { token },
+    transports: ["websocket", "polling"],
+    reconnectionAttempts: 10,
+    reconnectionDelay: 1500,
+  });
+
   return socket;
 }
 
@@ -20,5 +24,3 @@ export function disconnectSocket() {
     socket = null;
   }
 }
-
-export { socket };
