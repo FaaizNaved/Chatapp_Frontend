@@ -5,7 +5,7 @@ import MessageArea from "../components/MessageArea";
 import MessageInput from "../components/MessageInput";
 import SettingsModal from "../components/SettingsModal";
 import ConversationComposer from "../components/ConversationComposer";
-import { apiRequest, clearSession } from "../lib/authApi";
+import { apiRequest, clearSession, API_BASE } from "../lib/authApi";
 import { getSocket, disconnectSocket } from "../socket";
 import { useToast } from "../components/ToastContext";
 
@@ -240,7 +240,7 @@ export default function ChatPage() {
   const handleLogout = useCallback(async () => {
     try {
       if (token) {
-        await fetch("/api/auth/logout", {
+        await fetch(`${API_BASE}/api/auth/logout`, {
           method: "POST",
           headers: { Authorization: `Bearer ${token}` }
         });
