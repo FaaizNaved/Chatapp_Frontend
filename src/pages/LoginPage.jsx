@@ -15,9 +15,6 @@ const EyeIcon = ({ open }) =>
     </svg>
   );
 
-/* ── helpers ────────────────────────────────────────────────── */
-const VERIFICATION_STUB = "stub"; // backend returns stub token when verification not required
-
 export default function LoginPage({ defaultTab = "login" }) {
   const navigate  = useNavigate();
   const toast     = useToast();
@@ -34,6 +31,13 @@ export default function LoginPage({ defaultTab = "login" }) {
   });
   const [regLoading,  setRegLoading]  = useState(false);
   const [showRegPwd,  setShowRegPwd]  = useState(false);
+
+  /* ── OTP verification state ─── */
+  const [regStep, setRegStep] = useState("form"); // "form" | "verify-email" | "verify-phone"
+  const [otpCode, setOtpCode] = useState("");
+  const [otpSending, setOtpSending] = useState(false);
+  const [emailVerified, setEmailVerified] = useState(false);
+  const [phoneVerified, setPhoneVerified] = useState(false);
 
   /* ── Login ─────────────────────────────────────────────── */
   async function handleLogin(e) {
@@ -60,35 +64,120 @@ export default function LoginPage({ defaultTab = "login" }) {
     }
   }
 
-  /* ── Register ───────────────────────────────────────────── */
-  async function handleRegister(e) {
+  /* ── Register: Step 1 — Submit form & send email OTP ──── */
+  async function handleRegisterSubmit(e) {
     e.preventDefault();
     const { username, password, confirmPassword, email, phone } = regForm;
 
     if (!username.trim()) { toast.error("Username is required."); return; }
     if (username.trim().length < 3) { toast.error("Username must be at least 3 characters."); return; }
+    if (!email.trim()) { toast.error("Email is required."); return; }
+    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRe.test(email.trim())) { toast.error("Invalid email address."); return; }
     if (!password) { toast.error("Password is required."); return; }
     if (password.length < 6) { toast.error("Password must be at least 6 characters."); return; }
     if (confirmPassword && password !== confirmPassword) { toast.error("Passwords do not match."); return; }
 
     setRegLoading(true);
     try {
-      const data = await apiRequest("/api/auth/register", {
+      await apiRequest("/api/auth/register/send-otp", {
         method: "POST",
         body: JSON.stringify({
-          username:  username.trim(),
+          username: username.trim(),
           password,
-          email:     email.trim(),
-          phone:     phone.trim()
+          confirmPassword,
+          email: email.trim(),
+          phone: phone.trim(),
+          field: "email"
         })
       });
-      saveSession(data);
-      toast.success("Account created! Welcome to ChatSphere 🎉");
-      navigate("/chat", { replace: true });
+      toast.success("Verification code sent to your email!");
+      setRegStep("verify-email");
+      setOtpCode("");
     } catch (err) {
-      toast.error(err.message || "Registration failed. Try a different username.");
+      toast.error(err.message || "Registration failed.");
     } finally {
       setRegLoading(false);
+    }
+  }
+
+  /* ── Register: Verify OTP ─────────────────────────────── */
+  async function handleVerifyOtp(field) {
+    if (!otpCode.trim() || otpCode.trim().length !== 6) {
+      toast.error("Enter the 6-digit verification code.");
+      return;
+    }
+    setOtpSending(true);
+    try {
+      const data = await apiRequest("/api/auth/register/verify-otp", {
+        method: "POST",
+        body: JSON.stringify({
+          username: regForm.username.trim(),
+          email: regForm.email.trim(),
+          code: otpCode.trim(),
+          field
+        })
+      });
+
+      if (data.accountCreated) {
+        // All verified — account created
+        saveSession(data);
+        toast.success("Account created! Welcome to ChatSphere 🎉");
+        navigate("/chat", { replace: true });
+        return;
+      }
+
+      // Partial verification
+      if (field === "email") {
+        setEmailVerified(true);
+        toast.success("Email verified!");
+        if (regForm.phone.trim() && !data.phoneVerified) {
+          // Need to verify phone next
+          setRegStep("verify-phone");
+          setOtpCode("");
+          // Send phone OTP
+          await apiRequest("/api/auth/register/send-otp", {
+            method: "POST",
+            body: JSON.stringify({
+              username: regForm.username.trim(),
+              password: regForm.password,
+              email: regForm.email.trim(),
+              phone: regForm.phone.trim(),
+              field: "phone"
+            })
+          });
+          toast.success("Verification code sent to your phone!");
+        }
+      } else if (field === "phone") {
+        setPhoneVerified(true);
+        toast.success("Phone verified!");
+      }
+    } catch (err) {
+      toast.error(err.message || "Verification failed.");
+    } finally {
+      setOtpSending(false);
+    }
+  }
+
+  /* ── Resend OTP ─────────────────────────────────────────── */
+  async function handleResendOtp(field) {
+    setOtpSending(true);
+    try {
+      await apiRequest("/api/auth/register/send-otp", {
+        method: "POST",
+        body: JSON.stringify({
+          username: regForm.username.trim(),
+          password: regForm.password,
+          email: regForm.email.trim(),
+          phone: regForm.phone.trim(),
+          field
+        })
+      });
+      toast.success(`New code sent to your ${field}!`);
+    } catch (err) {
+      toast.error(err.message || "Failed to resend code.");
+    } finally {
+      setOtpSending(false);
     }
   }
 
@@ -100,6 +189,73 @@ export default function LoginPage({ defaultTab = "login" }) {
       <div className="auth-orb auth-orb-3" />
     </div>
   );
+
+  /* ── OTP verification UI ─── */
+  function renderOtpStep(field) {
+    const isEmail = field === "email";
+    const target = isEmail ? regForm.email : regForm.phone;
+
+    return (
+      <div className="auth-form" style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        <button
+          type="button"
+          className="text-link-inline"
+          style={{ alignSelf: "flex-start", fontSize: "0.85rem", opacity: 0.7 }}
+          onClick={() => { setRegStep("form"); setOtpCode(""); setEmailVerified(false); setPhoneVerified(false); }}
+        >
+          ← Back to form
+        </button>
+
+        <div style={{ textAlign: "center", padding: "12px 0" }}>
+          <div style={{ fontSize: "2.5rem", marginBottom: 12 }}>{isEmail ? "📧" : "📱"}</div>
+          <h3 style={{ margin: "0 0 8px", color: "var(--text-primary)", fontSize: "1.15rem" }}>
+            Verify your {isEmail ? "email" : "phone"}
+          </h3>
+          <p style={{ margin: 0, color: "var(--text-secondary)", fontSize: "0.88rem", lineHeight: 1.6 }}>
+            We sent a 6-digit code to<br />
+            <strong style={{ color: "var(--accent-strong)" }}>{target}</strong>
+          </p>
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="otp-input" className="field-label">Verification code</label>
+          <input
+            id="otp-input"
+            className="form-input"
+            type="text"
+            inputMode="numeric"
+            maxLength={6}
+            value={otpCode}
+            onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+            placeholder="Enter 6-digit code"
+            autoFocus
+            style={{ textAlign: "center", fontSize: "1.3rem", letterSpacing: "0.3em", fontWeight: 700 }}
+          />
+        </div>
+
+        <button
+          className="btn-primary auth-submit-btn"
+          type="button"
+          disabled={otpSending || otpCode.length !== 6}
+          onClick={() => handleVerifyOtp(field)}
+        >
+          {otpSending ? <span className="btn-spinner" /> : "Verify →"}
+        </button>
+
+        <p style={{ textAlign: "center", color: "var(--text-muted)", fontSize: "0.82rem", margin: 0 }}>
+          Didn't receive the code?{" "}
+          <button
+            type="button"
+            className="text-link-inline"
+            onClick={() => handleResendOtp(field)}
+            disabled={otpSending}
+          >
+            Resend
+          </button>
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="auth-shell">
@@ -136,7 +292,7 @@ export default function LoginPage({ defaultTab = "login" }) {
             <button
               type="button"
               className={`auth-tab${tab === "login" ? " active" : ""}`}
-              onClick={() => setTab("login")}
+              onClick={() => { setTab("login"); setRegStep("form"); }}
               id="tab-login"
             >
               Sign In
@@ -218,8 +374,8 @@ export default function LoginPage({ defaultTab = "login" }) {
           )}
 
           {/* ══ REGISTER FORM ════════════════════════════════ */}
-          {tab === "register" && (
-            <form className="auth-form" onSubmit={handleRegister} noValidate>
+          {tab === "register" && regStep === "form" && (
+            <form className="auth-form" onSubmit={handleRegisterSubmit} noValidate>
               <div className="form-group">
                 <label htmlFor="reg-username" className="field-label">Username <span className="required-star">*</span></label>
                 <input
@@ -235,7 +391,7 @@ export default function LoginPage({ defaultTab = "login" }) {
               </div>
 
               <div className="form-group">
-                <label htmlFor="reg-email" className="field-label">Email address</label>
+                <label htmlFor="reg-email" className="field-label">Email address <span className="required-star">*</span></label>
                 <input
                   id="reg-email"
                   className="form-input"
@@ -244,20 +400,26 @@ export default function LoginPage({ defaultTab = "login" }) {
                   onChange={(e) => setRegForm((f) => ({ ...f, email: e.target.value }))}
                   placeholder="name@example.com"
                   autoComplete="email"
+                  required
                 />
               </div>
 
               <div className="form-group">
-                <label htmlFor="reg-phone" className="field-label">Phone number</label>
+                <label htmlFor="reg-phone" className="field-label">Phone number <span style={{ color: "var(--text-muted)", fontWeight: 400, fontSize: "0.75rem" }}>(optional)</span></label>
                 <input
                   id="reg-phone"
                   className="form-input"
                   type="tel"
                   value={regForm.phone}
                   onChange={(e) => setRegForm((f) => ({ ...f, phone: e.target.value }))}
-                  placeholder="+91 9876543210 (optional)"
+                  placeholder="+91 9876543210"
                   autoComplete="tel"
                 />
+                {regForm.phone.trim() && (
+                  <p style={{ margin: "6px 0 0", fontSize: "0.75rem", color: "var(--warning)", opacity: 0.8 }}>
+                    ⚠ Phone will need to be verified via SMS
+                  </p>
+                )}
               </div>
 
               <div className="form-group">
@@ -304,7 +466,7 @@ export default function LoginPage({ defaultTab = "login" }) {
               >
                 {regLoading ? (
                   <span className="btn-spinner" />
-                ) : "Create Account →"}
+                ) : "Continue — Verify Email →"}
               </button>
 
               <p className="auth-switch-hint">
@@ -315,6 +477,10 @@ export default function LoginPage({ defaultTab = "login" }) {
               </p>
             </form>
           )}
+
+          {/* ══ OTP VERIFICATION STEPS ═══════════════════════ */}
+          {tab === "register" && regStep === "verify-email" && renderOtpStep("email")}
+          {tab === "register" && regStep === "verify-phone" && renderOtpStep("phone")}
         </div>
       </div>
     </div>
